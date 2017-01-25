@@ -12,30 +12,24 @@ db = SQLAlchemy()
 def get_all_projects():
     QUERY = """SELECT title FROM projects"""
 
-    db_cursor = db.session.execute(QUERY)
 
-    ret = []
+    return db.session.execute(QUERY).fetchall()  # e.g. [('Markov',), ('Blockly'),]
 
-    record = db_cursor.fetchone()
-    while record is not None:
-        ret.append(record[0])
-        record = db_cursor.fetchone()
+    # db_cursor = db.session.execute(QUERY)
 
-    return ret
+    # ret = []
+
+    # record = db_cursor.fetchone()
+    # while record is not None:
+    #     ret.append(record[0])
+    #     record = db_cursor.fetchone()
+
+    # return ret
 
 def get_all_students():
     QUERY = """SELECT github FROM students"""
 
-    db_cursor = db.session.execute(QUERY)
-
-    ret = []
-
-    record = db_cursor.fetchone()
-    while record is not None:
-        ret.append(record[0])
-        record = db_cursor.fetchone()
-
-    return ret
+    return db.session.execute(QUERY).fetchall()  # e.g. [('jessapp',), ('esqg'),]
 
 
 def connect_to_db(app):
@@ -65,9 +59,6 @@ def get_student_by_github(github):
 
 def make_new_student(first_name, last_name, github):
     """Add a new student and print confirmation.
-
-    Given a first name, last name, and GitHub account, add student to the
-    database and print a confirmation message.
     """
 
     QUERY = """
@@ -80,6 +71,24 @@ def make_new_student(first_name, last_name, github):
                                 'github': github})
     db.session.commit()
     print "Successfully added student: %s %s" % (first_name, last_name)
+
+
+def make_new_project(title, description, max_grade):
+    """Add a new project and print confirmation.
+    """
+
+    QUERY = """
+    INSERT INTO projects (title, description, max_grade)
+    VALUES (:title, :description, :max_grade)
+    """
+    
+    db.session.execute(QUERY, {'title': title,
+                                'description': description,
+                                'max_grade': max_grade})
+    db.session.commit()
+    print "Successfully added project: %s" % (title)
+
+
 
 
 def get_project_by_title(title):
@@ -111,6 +120,25 @@ def get_grade_by_github_title(github, title):
     print "Student %s in project %s received grade of %s" % (
         github, title, row[0])
     return row
+
+
+def update_grade(github, title, grade):
+    """Updates prexisting grades"""
+
+    ID_FINDER = """SELECT id FROM grades WHERE student_github = :github AND
+    project_title = :title """
+
+    record_id = db.session.execute(ID_FINDER, {'github': github, 'title': title}).fetchone()[0]
+
+    if record_id is None:
+        assign_grade(github, title, grade)
+    else:
+        print record_id
+        UPDATE_QUERY = """UPDATE grades SET grade = :grade WHERE id=:record_id"""
+        db.session.execute(UPDATE_QUERY, {'record_id':record_id, 'grade': grade})
+        db.session.commit()
+        print "Updated %s's grade on %s to %s." % (github, title, grade)
+
 
 
 def assign_grade(github, title, grade):

@@ -6,12 +6,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    print "entered route"
     projects = hackbright.get_all_projects()
-    print 'got projects'
 
     students=hackbright.get_all_students()
-    print 'got students'
 
     return render_template("index.html", students=students, projects=projects)
 
@@ -59,12 +56,35 @@ def student_add():
     else:
         return redirect("/new-student")
 
-@app.route("/project")
-def show_project():
-    """Takes a GET request with a project title, displays info."""
 
+@app.route("/new-project")
+def new_project():
+    """Displays form for new project information"""
 
-    title = request.args.get('title')
+    return render_template("new_project.html")
+
+@app.route("/project-add", methods=['POST'])
+def project_add():
+    """Add a project"""
+
+    title=request.form.get('title')
+    description=request.form.get('description')
+    max_grade=int(request.form.get('max-grade'))
+
+    if title and description and (max_grade is not None):
+        hackbright.make_new_project(title, description, max_grade)   # Adds student to database
+        return render_template("project_add.html", title=title,
+                                                    description=description,
+                                                    max_grade=max_grade)
+
+    else:
+        return redirect("/new-student")
+
+@app.route("/project/<title>")
+def show_project(title):
+    """Takes a URL with a project title, displays info."""
+
+    # title = request.args.get('title')
 
     title, description, max_grade = hackbright.get_project_by_title(title)  # doesn't return id!!
 

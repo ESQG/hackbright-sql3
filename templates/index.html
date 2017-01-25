@@ -9,7 +9,7 @@
     <h2>Current Students</h2>
     {% if students %}
       <ul>
-        {% for github in students %}
+        {% for (github,) in students %}
             <li><a href="/student?github={{github}}">{{github}}</a></li>
 
         {% endfor %}
@@ -23,8 +23,8 @@
     <h2>Current Projects</h2>
     {% if projects %}
       <ul>
-        {% for title in projects %}
-            <li><a href="/project?title={{title}}">{{title}}</a></li>
+        {% for (title,) in projects %}
+            <li><a href="/project/{{title}}">{{title}}</a></li>
 
         {% endfor %}
 

@@ -11,7 +11,7 @@
 {% if projects %}
     <ul>
     {% for project, grade in projects %}
-        <li>Scored {{grade}} on <a href="/project?title={{project}}">{{project}}</a></li>
+        <li>Scored {{grade}} on <a href="/project/{{project}}">{{project}}</a></li>
     {% endfor %}
     </ul>
 {% else %}
