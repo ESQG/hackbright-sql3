@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <title>Project Info</title>
+</head>
+
+<body> 
+    <h1>Project {{title}}</h1>
+
+    <p>Description: {{description}}</p>
+
+    <p>Maximum Grade: {{max_grade}}</p>
+
+    <h2>Students Who Have Done This Project</h2>
+
+    {% if graded_students %}
+      <ul>
+        {% for (github, grade) in graded_students %}
+            <li>{{github}} scored {{grade}}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+    <p> Nobody has done this yet! :(</p>
+    {% endif %}
+
+</body>
+</html>

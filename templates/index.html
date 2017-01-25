@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <title>Some Kind Of School</title>
+</head>
+
+<body>
+
+    <h2>Current Students</h2>
+    {% if students %}
+      <ul>
+        {% for github in students %}
+            <li><a href="/student?github={{github}}">{{github}}</a></li>
+
+        {% endfor %}
+
+      </ul>
+    {% else %}
+    None so far!  <a href="/new-student">Wanna sign up?</a>
+
+    {% endif %}
+
+    <h2>Current Projects</h2>
+    {% if projects %}
+      <ul>
+        {% for title in projects %}
+            <li><a href="/project?title={{title}}">{{title}}</a></li>
+
+        {% endfor %}
+
+      </ul>
+    {% else %}
+    None so far!  <a href="/new-student">Wanna sign up?</a>
+
+    {% endif %}
+
+
+</body>
+</html>
